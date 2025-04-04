@@ -4,7 +4,7 @@
 
 ## 代码构成
 carla_nuscenes.py：生成nuscenes数据集（目前config设置是正方形渲染）
-test_nr_look_pytorch3d_v5.py Pytorch3D渲染代码
+test_nr_look_pytorch3d_v5.py Pytorch3D渲染代码（目前只支持正方形渲染）
 
 ## Requirements:
 pytorch3d
