@@ -1,0 +1,11 @@
+- 
+  bp_name: "walker.pedestrian.0001"
+  location:
+      x: -70.25457000732422
+      y: 30.96375846862793
+      z: 0.5999999642372131
+  rotation:
+    yaw: -90
+    pitch: 0
+    roll: 0
+  destination: ~
