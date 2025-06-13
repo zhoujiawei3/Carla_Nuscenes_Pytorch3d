@@ -4,13 +4,13 @@ This project creates driving scenes in **CARLA** where a single ego vehicle is s
 
 <p align="center">
   <img src="./rendered_images_6_13_test_with_rgb/scene_0/multi_view_blended_scene0_sample0.png" width="45%"/>
-  <img src=".rendered_images_6_13_test_with_rgb/scene_0/multi_view_blended_scene0_sample0.png" width="45%"/>
+  <img src="./rendered_images_6_13_test_with_rgb/scene_0/multi_view_blended_scene0_sample0.png" width="45%"/>
 </p>
 
 ---
 
 ## Project Structure
-
+```bash
 Carla_Nuscenes_Pytorch3d/
 ├── carla_nuscenes/ # Code to generate nuScenes-style dataset from CARLA
 │ ├── generate.py
@@ -21,7 +21,7 @@ Carla_Nuscenes_Pytorch3d/
 ├── Pytorch3d_Render_Replace_masked_Image.py # Render using PyTorch3D and replace vehicles in masked regions
 ├── test_rgb/ # Generated nuScenes-style RGB images
 ├── test_seg/ # Corresponding segmentation masks (aligned with RGB keyframes)
-
+```
 
 
 ---
