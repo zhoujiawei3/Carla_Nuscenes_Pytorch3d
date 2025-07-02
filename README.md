@@ -1,6 +1,6 @@
 # Carla_Nuscenes_Pytorch3d
 
-This project creates driving scenes in **CARLA** where a single ego vehicle is surrounded by **exactly one other vehicle**, simulating simple interaction scenarios. The scenes are exported in the **nuScenes** data format, and the surrounding vehicle is replaced with high-fidelity **PyTorch3D** renderings. The final output supports multi-view visualization of realistic driving scenarios with enhanced vehicle appearance and rendering consistency.
+This project creates driving scenes in **CARLA** where a single ego vehicle is surrounded by **exactly one other vehicle**, simulating simple interaction scenarios. The scenes are exported in the **nuScenes** data format (with LidarSeg), and the surrounding vehicle is replaced with high-fidelity **PyTorch3D** renderings. The final output supports multi-view visualization of realistic driving scenarios with enhanced vehicle appearance and rendering consistency.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/zhoujiawei3/Carla_Nuscenes_Pytorch3d/main/upload_rendered_images_6_13_test_with_rgb/scene_0/multi_view_original_scene0_sample0.png" width="45%"/>
