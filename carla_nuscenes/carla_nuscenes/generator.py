@@ -14,7 +14,7 @@ class Generator:
         for sensor in self.config["sensors"]:
             self.dataset.update_sensor(sensor["name"],sensor["modality"])
         for category in self.config["categories"]:
-            self.dataset.update_category(category["name"],category["description"])
+            self.dataset.update_category(category["name"],category["description"],category["index"])
         for attribute in self.config["attributes"]:
             self.dataset.update_attribute(attribute["name"],category["description"])
         for visibility in self.config["visibility"]:
@@ -89,7 +89,12 @@ class Generator:
                                     is_key_frame = True
                                     print("key_timestamp:",sample_data[1].timestamp)
                                     print("time_delta:",sample_data[1].timestamp-self.collect_client.get_timestamp())
-                                    
+                                if sensor.bp_name == 'sensor.lidar.ray_cast' and is_key_frame:
+                                    for sensor_second in self.collect_client.sensors:
+                                        if sensor_second.bp_name == "sensor.lidar.ray_cast_semantic":
+                                            sem_sample_data_second = sensor_second.get_data_list()[-1]
+                                            self.dataset.update_sem_lidar_data(ego_pose_token,sem_sample_data_second)
+                                
                                 samples_data_token[sensor.name] = self.dataset.update_sample_data(samples_data_token[sensor.name],calibrated_sensors_token[sensor.name],sample_token,ego_pose_token,is_key_frame,*self.collect_client.get_sample_data(sample_data),*self.collect_client.get_vehicle_transform(sample_data))
 
                     for instance in self.collect_client.walkers+self.collect_client.vehicles:

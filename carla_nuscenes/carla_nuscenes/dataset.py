@@ -1,7 +1,7 @@
 import os
 from .utils import load,dump,generate_token
 import carla
-from .sensor import parse_lidar_data,parse_radar_data
+from .sensor import parse_lidar_data,parse_radar_data,parse_semlidar_data
 from copy import deepcopy
 from PIL import Image, ImageDraw
 import numpy as np
@@ -11,6 +11,10 @@ def save_image(image,path):
 def save_lidar_data(lidar_data,path):
     points = parse_lidar_data(lidar_data)
     points.tofile(path)
+def save_sem_lidar_data(sem_lidar_data,path):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tags = parse_semlidar_data(sem_lidar_data)
+    tags.tofile(path)
 
 def save_radar_data(radar_data,path):
     points = parse_radar_data(radar_data)
@@ -22,7 +26,9 @@ def save_sensor_data(data,path):
     elif isinstance(data,carla.RadarMeasurement):
         save_radar_data(data,path)
     elif isinstance(data,carla.LidarMeasurement):
-        save_lidar_data(data,path)   
+        save_lidar_data(data,path)
+    elif isinstance(data, carla.SemanticLidarMeasurement):
+        return save_sem_lidar_data(data,path)
 
 def mkdir(path):
     if not os.path.exists(path):
@@ -52,6 +58,7 @@ class Dataset:
             "scene":[],
             "sensor":[],
             "visibility":[],
+            "lidarseg":[],
             "progress":{"current_world_index":0,
                         "current_capture_index":0,
                         "current_scene_index":0,
@@ -191,8 +198,17 @@ class Dataset:
             self.data["sample"].remove(self.get_item("sample",sample_item["token"]))
             self.data["sample"].append(sample_item)
         return sample_item["token"]
-
+    def update_sem_lidar_data(self,ego_pose_token,sample_data):
+        filename = 'lidarseg\\v1.14\\'+ego_pose_token+'_lidarseg.bin'
+        save_sensor_data(sample_data[1],os.path.join(self.root,filename))
+        entry = {
+        "token": ego_pose_token,
+        "sample_data_token": ego_pose_token,  # 如果有别的token请替换
+        "filename": filename
+        }
+        self.data["lidarseg"].append(entry)
     def update_sample_data(self,prev,calibrated_sensor_token,sample_token,ego_pose_token,is_key_frame,sample_data,height,width,renderer_vehicle_location,renderer_vehicle_rotation,replace=True):
+        
         sample_data_item = {}
         sample_data_item["token"] = ego_pose_token
         sample_data_item["sample_token"] = sample_token
@@ -293,11 +309,12 @@ class Dataset:
             self.data["attribute"].append(attribute_item)
         return attribute_item["token"]
 
-    def update_category(self,name,description,replace=True):
+    def update_category(self,name,description,index,replace=True):
         category_item = {}
         category_item["token"] = generate_token("category",name)
         category_item["name"] = name
         category_item["description"] = description
+        category_item["index"]=index
         if self.get_item("category",category_item["token"]) is None:
             self.data["category"].append(category_item)
         elif replace:
