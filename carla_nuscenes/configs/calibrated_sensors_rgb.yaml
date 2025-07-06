@@ -189,7 +189,8 @@ sensors:
       'horizontal_fov': '360'
       'sensor_tick': '0.05'
       'rotation_frequency': '100'
-
+      'dropoff_general_rate': '0.0' # To make shape aligned with lidarseg,remove if don't need lidarseg
+      'dropoff_intensity_limit': '0.0' # To make shape aligned with lidarseg,remove if don't need lidarseg
   - 
     name: 'SEM_LIDAR_TOP'
     bp_name: 'sensor.lidar.ray_cast_semantic'
