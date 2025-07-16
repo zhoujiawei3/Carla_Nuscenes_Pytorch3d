@@ -3,7 +3,39 @@ import carla
 from .actor import Actor
 import queue
 
+#specific carla's semantic label can be found in LibCarla/source/carla/rpc
 
+carla_to_nuscenes_map = {
+    0: 0,    # None → noise
+    1: 24,   # Roads → flat.driveable_surface
+    2: 26,   # Sidewalks → flat.sidewalk
+    3: 28,   # Buildings → static.manmade
+    4: 28,   # Walls → static.manmade
+    5: 28,   # Fences → static.manmade
+    6: 28,   # Poles → static.manmade
+    7: 28,   # TrafficLight → static.manmade
+    8: 28,   # TrafficSigns → static.manmade
+    9: 30,   # Vegetation → static.vegetation
+    10: 27,  # Terrain → flat.terrain
+    11: 29,  # Sky → static.other
+    12: 2,   # Pedestrians → human.pedestrian.adult
+    13: 5,   # Rider → human.pedestrian.personal_mobility
+    14: 17,  # Car → vehicle.car
+    15: 23,  # Truck → vehicle.truck
+    16: 16,  # Bus → vehicle.bus.rigid
+    17: 22,  # Train → vehicle.trailer
+    18: 21,  # Motorcycle → vehicle.motorcycle
+    19: 14,  # Bicycle → vehicle.bicycle
+    20: 28,  # Static → static.manmade
+    21: 3,   # Dynamic → human.pedestrian.child
+    22: 29,  # Other → static.other
+    23: 25,  # Water → flat.other
+    24: 24,  # RoadLines → flat.driveable_surface
+    25: 27,  # Ground → flat.terrain
+    26: 28,  # Bridge → static.manmade
+    27: 25,  # RailTrack → flat.other
+    28: 28,  # GuardRail → static.manmade
+}
 def parse_image(image):
     array = np.ndarray(
             shape=(image.height, image.width, 4),
@@ -22,17 +54,26 @@ def parse_lidar_data(lidar_data):
         points.append(point)
     return np.array(points)
 
+def parse_semlidar_data(semlidar_data):
+    tags = []
+    for idx,data in enumerate(semlidar_data):
+        tag = data.object_tag
+        tags.append(carla_to_nuscenes_map[tag])
+    return np.array(tags, dtype=np.uint8)
+
 def parse_radar_data(radar_data):
     points = np.frombuffer(radar_data.raw_data, dtype=np.dtype('f4')).copy()
     return points
 
-def parse_data(data):
-    if isinstance(data,carla.Image):
-        return parse_image(data)
-    elif isinstance(data,carla.RadarMeasurement):
-        return parse_radar_data(data)
-    elif isinstance(data,carla.LidarMeasurement):
-        return parse_lidar_data(data)
+# def parse_data(data):
+#     if isinstance(data,carla.Image):
+#         return parse_image(data)
+#     elif isinstance(data,carla.RadarMeasurement):
+#         return parse_radar_data(data)
+#     elif isinstance(data,carla.LidarMeasurement):
+#         return parse_lidar_data(data)
+#     elif isinstance(data, carla.SemanticLidarMeasurement):
+#         return parse_semlidar_data(data)
 
 def get_data_shape(data):
     if isinstance(data,carla.Image):
